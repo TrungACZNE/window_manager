@@ -15,7 +15,16 @@ namespace wm
 class Window : public sf::RectangleShape
 {
 public:
-    ~Window() { }
+    void onMouseDown(int x, int y)
+    {
+        std::cerr << "onMouseDown(" << x << ", " << y << ")" << std::endl;
+    }
+
+    void onTextEntered(uint32_t code)
+    {
+        char c = (code < 128) ? static_cast<char>(code) : '?';
+        std::cout << "Received: " << c << std::endl;
+    }
 private:
 };
 
@@ -53,7 +62,7 @@ public:
     }
 
     /* bump a window to the top layer */
-    void bumpWindow(int index) {
+    void focusWindow(int index) {
         if (index == (int) windows.size() - 1) {
             return;
         }
@@ -62,28 +71,45 @@ public:
         windows.push_back(window);
     }
 
+    /* -1 if no window found */
+    int getFocusedWindow()
+    {
+        return windows.size() - 1;
+    }
+
     void processEvents() {
         sf::Event event;
 
         while (renderWindow->pollEvent(event))
         {
-            int clicked;
-            switch (event.type) {
-                case sf::Event::Closed:
-                    renderWindow->close();
-                    break;
-                case sf::Event::MouseButtonPressed:
-                    clicked = findEnclosingWindow(event.mouseButton.x, event.mouseButton.y) ;
-                    if (clicked != -1) {
-                        bumpWindow(clicked);
-                    }
-                    break;
-                case sf::Event::MouseButtonReleased:
-                    std::cerr << "onMouseUp " << event.mouseButton.x << " " << event.mouseButton.y << std::endl;
-                    break;
-                default:
-                    break;
+            if (event.type == sf::Event::Closed)
+            {
+                renderWindow->close();
+                return;
+            }
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                int clicked = findEnclosingWindow(event.mouseButton.x, event.mouseButton.y);
+                if (clicked != -1) {
+                    focusWindow(clicked);
+                }
+                break;
+            }
 
+            int focusedIndex = getFocusedWindow();
+            if (focusedIndex != - 1) {
+                auto window = windows[focusedIndex];
+                auto bounds = window->getLocalBounds();
+                switch (event.type)
+                {
+                    case sf::Event::MouseButtonPressed:
+                        window->onMouseDown(event.mouseButton.x - bounds.left, event.mouseButton.y - bounds.top);
+                        break;
+                    case sf::Event::TextEntered:
+                        window->onTextEntered(event.text.unicode);
+                        break;
+                    default: break;
+                }
             }
         }
     }
