@@ -17,11 +17,11 @@ namespace wm
 class Element : public sf::Drawable
 {
 public:
-    virtual void setSize(int width, int height) = 0;
-    virtual int getWidth() const = 0;
-    virtual int getHeight() const = 0;
+    virtual void setSize(uint32_t width, uint32_t height) = 0;
+    virtual uint32_t getWidth() const = 0;
+    virtual uint32_t getHeight() const = 0;
 
-    virtual void onMouseDown(int x, int y) = 0;
+    virtual void onMouseDown(uint32_t x, uint32_t y) = 0;
     virtual void onTextEntered(uint32_t code) = 0;
 };
 
@@ -29,13 +29,13 @@ class RectangularElement : public Element
 {
 public:
     RectangularElement ();
-    virtual void setSize(int width, int height);
+    virtual void setSize(uint32_t width, uint32_t height);
 
-    virtual int getWidth() const;
-    virtual int getHeight() const;
+    virtual uint32_t getWidth() const;
+    virtual uint32_t getHeight() const;
 
 protected:
-    int width, height;
+    uint32_t width, height;
     sf::RectangleShape  rect;
 };
     

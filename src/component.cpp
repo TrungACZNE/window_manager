@@ -16,11 +16,11 @@ TextBox::TextBox()
     }
     text.setPosition(0, 0);
     text.setFont(font);
-    text.setCharacterSize(13);
+    text.setCharacterSize(18);
     text.setColor(sf::Color::Black);
 }
 
-void TextBox::onMouseDown(int x, int y)
+void TextBox::onMouseDown(uint32_t x, uint32_t y)
 {
     std::cerr << "onMouseDown(" << x << ", " << y << ")" << std::endl;
 }
@@ -38,7 +38,16 @@ void TextBox::setText(const std::string newText)
 
 void TextBox::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(rect, states);
-    target.draw(text, states);
+
+    auto newStates = states;
+    auto size = text.getLocalBounds();
+    if (size.width < width) {
+        newStates.transform.translate((width - size.width) / 2, 0 );
+    }
+    if (size.height < height) {
+        newStates.transform.translate(0, (height - size.height) / 2);
+    }
+    target.draw(text, newStates);
 }
 
 

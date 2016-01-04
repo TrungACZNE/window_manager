@@ -18,7 +18,7 @@ HorizontalLayout::HorizontalLayout ()
     setColor(sf::Color::White);
 }
 
-void HorizontalLayout::onMouseDown(__attribute__ ((unused))int x, __attribute__ ((unused))int y)
+void HorizontalLayout::onMouseDown(__attribute__ ((unused))uint32_t x, __attribute__ ((unused))uint32_t y)
 {
 }
 
@@ -28,7 +28,7 @@ void HorizontalLayout::onTextEntered(__attribute__ ((unused))uint32_t code)
 
 void HorizontalLayout::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    int x = 0;
+    uint32_t x = 0;
     target.draw(rect, states);
     for (auto child : children) {
         sf::RenderStates newStates = states;
@@ -44,7 +44,7 @@ VerticalLayout::VerticalLayout ()
     setColor(sf::Color::White);
 }
 
-void VerticalLayout::onMouseDown(__attribute__ ((unused))int x, __attribute__ ((unused))int y)
+void VerticalLayout::onMouseDown(__attribute__ ((unused))uint32_t x, __attribute__ ((unused))uint32_t y)
 {
 }
 

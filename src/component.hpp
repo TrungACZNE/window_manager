@@ -10,7 +10,7 @@ public:
 
     void setText(const std::string newText);
 
-    virtual void onMouseDown(int x, int y);
+    virtual void onMouseDown(uint32_t x, uint32_t y);
     virtual void onTextEntered(uint32_t code);
 
 private:

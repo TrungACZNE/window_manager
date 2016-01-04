@@ -17,7 +17,7 @@ class HorizontalLayout : public LinearLayout
 public:
     HorizontalLayout ();
 
-    virtual void onMouseDown(__attribute__ ((unused))int x, __attribute__ ((unused))int y);
+    virtual void onMouseDown(__attribute__ ((unused))uint32_t x, __attribute__ ((unused))uint32_t y);
     virtual void onTextEntered(__attribute__ ((unused))uint32_t code);
 
 private:
@@ -29,7 +29,7 @@ class VerticalLayout : public LinearLayout
 public:
     VerticalLayout ();
 
-    virtual void onMouseDown(__attribute__ ((unused))int x, __attribute__ ((unused))int y);
+    virtual void onMouseDown(__attribute__ ((unused))uint32_t x, __attribute__ ((unused))uint32_t y);
     virtual void onTextEntered(__attribute__ ((unused))uint32_t code);
 private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
