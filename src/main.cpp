@@ -12,9 +12,23 @@
 namespace wm
 {
 
-class Window : public sf::RectangleShape
+class Window : public sf::Drawable
 {
 public:
+    Window() throw (std::string)
+    {
+        rect.setFillColor(sf::Color::White);
+        rect.setOutlineThickness(1);
+        rect.setOutlineColor(sf::Color::Black);
+
+        if (!font.loadFromFile("./data/fonts/monaco.ttf"))
+        {
+            throw "Cannot load font";
+        }
+        text.setFont(font);
+        text.setCharacterSize(13);
+        text.setColor(sf::Color::Black);
+    }
     void onMouseDown(int x, int y)
     {
         std::cerr << "onMouseDown(" << x << ", " << y << ")" << std::endl;
@@ -23,9 +37,52 @@ public:
     void onTextEntered(uint32_t code)
     {
         char c = (code < 128) ? static_cast<char>(code) : '?';
-        std::cout << "Received: " << c << std::endl;
+        text.setString(text.getString() + c);
     }
+
+    void setPosition(int x, int y)
+    {
+        this->x = x;
+        this->y = y;
+        updatePosition();
+    }
+
+    void setSize(int width, int height)
+    {
+        this->width=width;
+        this->height=height;
+        updateSize();
+    }
+
+    sf::FloatRect getGlobalBounds()	const
+    {
+        return rect.getGlobalBounds();
+    }
+
+    sf::FloatRect getLocalBounds() const
+    {
+        return rect.getLocalBounds();
+    }
+
 private:
+    int x, y, width, height;
+    sf::Font            font;
+    sf::Text            text;
+    sf::RectangleShape  rect;
+
+    void updatePosition() {
+        rect.setPosition(x, y);
+        text.setPosition(x, y);
+    }
+
+    void updateSize() {
+        rect.setSize(sf::Vector2f(width, height));
+    }
+
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
+        target.draw(rect, states);
+        target.draw(text, states);
+    }
 };
 
 class WindowManager
@@ -35,8 +92,7 @@ public:
     {
         this->renderWindow = renderWindow;
         backgroundWindow.setPosition(0, 0);
-        backgroundWindow.setSize(sf::Vector2f(800, 600));
-        backgroundWindow.setFillColor(sf::Color::White);
+        backgroundWindow.setSize(800, 600);
     }
 
     int64_t tickRate = 1000000 / 60;
@@ -169,16 +225,13 @@ int main()
     windowManager.appendChild(window3);
 
     window1->setPosition(100, 100);
-    window1->setSize(sf::Vector2f(500, 150));
-    window1->setFillColor(sf::Color::Green);
+    window1->setSize(500, 150);
 
     window2->setPosition(200, 200);
-    window2->setSize(sf::Vector2f(500, 150));
-    window2->setFillColor(sf::Color::Red);
+    window2->setSize(500, 150);
 
-    window3->setPosition(300, 300);
-    window3->setSize(sf::Vector2f(500, 150));
-    window3->setFillColor(sf::Color::Cyan);
+    window3->setPosition(100, 300);
+    window3->setSize(600, 100);
 
     windowManager.start();
     return 0;
