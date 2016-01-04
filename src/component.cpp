@@ -22,7 +22,6 @@ TextBox::TextBox()
 
 void TextBox::onMouseDown(uint32_t x, uint32_t y)
 {
-    std::cerr << "onMouseDown(" << x << ", " << y << ")" << std::endl;
 }
 
 void TextBox::onTextEntered(uint32_t code)
@@ -66,10 +65,18 @@ void Window::processEvents() {
 
     while (renderWindow->pollEvent(event))
     {
-        if (event.type == sf::Event::Closed)
-        {
-            renderWindow->close();
-            return;
+        switch (event.type) {
+            case sf::Event::Closed:
+                renderWindow->close();
+                break;
+            case sf::Event::TextEntered:
+                child->onTextEntered(event.text.unicode);
+                break;
+            case sf::Event::MouseButtonPressed:
+                child->onMouseDown(event.mouseButton.x, event.mouseButton.y);
+                break;
+            default:
+                break;
         }
     }
 }
